@@ -32,7 +32,6 @@ class _GeoCampusMapScreenState extends State<GeoCampusMapScreen>
 
   // UI state
   bool _isCalibrating = true;
-  bool _gpsReady = false;
   String? _enteredZoneName;
   Timer? _zoneMessageTimer;
 
@@ -113,7 +112,6 @@ class _GeoCampusMapScreenState extends State<GeoCampusMapScreen>
     setState(() {
       _playerPosition = latlng;
       _playerHeading = pos.heading;
-      _gpsReady = true;
     });
 
     try {
@@ -246,6 +244,13 @@ class _GeoCampusMapScreenState extends State<GeoCampusMapScreen>
               urlTemplate:
                   'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
               userAgentPackageName: 'com.geocampus.eco_collect',
+            ),
+
+            MarkerLayer(
+              markers: [
+                for (final plant in plantProvider.plants)
+                  if (plant.position != null) _buildPlantMarker(plant),
+              ],
             ),
 
             // Player avatar marker

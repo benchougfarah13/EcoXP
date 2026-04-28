@@ -1,4 +1,3 @@
-import 'package:country_list_pick/country_list_pick.dart';
 import 'package:eco_collect/api/firebase_apis.dart';
 import 'package:eco_collect/components/buttons/reusable_button.dart';
 import 'package:eco_collect/components/reusable_bg_image.dart';
@@ -9,7 +8,6 @@ import 'package:eco_collect/constants/ktheme.dart';
 import 'package:eco_collect/providers/user_provider.dart';
 import 'package:eco_collect/routes/kroutes.dart';
 
-import 'package:eco_collect/screens/mother_earth_video.dart/mother_earth_video.dart';
 import 'package:eco_collect/screens/global/global_bottom_nav.dart';
 import 'package:eco_collect/utils/common_functions.dart';
 import 'package:flutter/material.dart';

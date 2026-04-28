@@ -19,9 +19,6 @@ class GameCollectibles {
         return _cherries;
       case KenumGameCollectibles.apple:
         return _apple;
-
-      default:
-        return _plasticBottle;
     }
   }
 

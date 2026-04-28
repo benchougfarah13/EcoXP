@@ -1,0 +1,21 @@
+# For Windows (Command Prompt)
+echo # Firebase & Google Services > .gitignore
+echo **/firebase_options.dart >> .gitignore
+echo **/GoogleService-Info.plist >> .gitignore
+echo **/google-services.json >> .gitignore
+echo. >> .gitignore
+echo # API Keys and secrets >> .gitignore
+echo *.env >> .gitignore
+echo .env.* >> .gitignore
+
+# For Mac/Linux (Terminal)
+cat > .gitignore << 'EOF'
+# Firebase & Google Services
+**/firebase_options.dart
+**/GoogleService-Info.plist
+**/google-services.json
+
+# API Keys and secrets
+*.env
+.env.*
+EOF
