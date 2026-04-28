@@ -1,0 +1,40 @@
+body{
+  background-image: url(bg.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  height: 100vh;
+  width: 100%;
+}
+
+.form-register {
+  max-width: 440px;
+  margin: auto;
+  margin-top: 30px;
+  background-color: #fff8e8;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  padding: 10px;
+}
+
+#header{
+  padding: 0px;
+}
+
+.btn{
+  background-color: #958A6E; 
+  border-color: #958A6E;
+}
+
+.btn:hover{
+  background-color:#958A6E;
+  border-color: #554832;
+  color:white;
+}
+
+@media all and (max-width: 500px) {
+  img{
+    width: 140px;
+    height: 140px;
+  }
+}

@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="Future Roots Manouba - Explorez le campus et découvrez sa végétation méditerranéenne dans un jeu AR immersif." />
+  <meta name="theme-color" content="#10b981" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>🌿 Future Roots — Campus de la Manouba</title>
+
+  <!-- MapLibre GL JS — Mapbox GRATUIT avec vrai 3D -->
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+
+  <!-- Three.js (Required for Elite Botanical Hub) -->
+  <script src="js/three.min.js"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Manifest PWA -->
+  <link rel="manifest" href="manifest.json" />
+</head>
+<body>
+  <!-- ============================================ -->
+  <!-- ÉCRAN DE CHARGEMENT                          -->
+  <!-- ============================================ -->
+  <div id="loading-screen" class="loading-screen" style="display: none;">
+    <div class="loading-content">
+      <div class="loading-logo">
+        <div class="logo-leaf">🌿</div>
+        <h1 class="logo-title">Future Roots</h1>
+        <p class="logo-subtitle">Campus de la Manouba</p>
+      </div>
+      <div class="loading-bar-container">
+        <div class="loading-bar" id="loading-bar"></div>
+      </div>
+      <p class="loading-text" id="loading-text">Initialisation de la carte...</p>
+    </div>
+    <div class="loading-particles" id="loading-particles"></div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- CARTE PRINCIPALE                             -->
+  <!-- ============================================ -->
+  <div id="map-container">
+    <div id="map"></div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- BARRE SUPÉRIEURE - STATUT JOUEUR             -->
+  <!-- ============================================ -->
+  <header id="top-bar" class="top-bar hidden" style="display: none;">
+    <div class="player-info">
+      <div class="player-avatar-frame">
+        <div class="player-avatar" id="player-avatar-icon">🧑‍🌾</div>
+        <div class="player-level" id="player-level">1</div>
+      </div>
+      <div class="player-details">
+        <h2 class="player-name" id="player-name">Explorateur</h2>
+        <div class="xp-bar-container">
+          <div class="xp-bar" id="xp-bar" style="width: 0%"></div>
+          <span class="xp-text" id="xp-text">0 / 100 XP</span>
+        </div>
+        <div class="player-coins-row" id="player-coins-row">
+          <span class="coin-icon" aria-hidden="true">🪙</span>
+          <span class="coin-value" id="player-coins">0</span>
+        </div>
+      </div>
+    </div>
+    <div id="zone-indicator" class="zone-indicator hidden" role="status" aria-live="polite">
+      <span class="zone-indicator-dot"></span>
+      <span id="zone-indicator-label" class="zone-indicator-label"></span>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btn-settings" aria-label="Paramètres">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============================================ -->
+  <!-- BARRE DE NAVIGATION INFÉRIEURE               -->
+  <!-- ============================================ -->
+  <nav id="bottom-nav" class="bottom-nav hidden" style="display: none;">
+    <button class="nav-btn active" id="btn-nav-map" data-tab="map">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+      <span>Carte</span>
+    </button>
+    <button class="nav-btn" id="btn-nav-prediction" data-tab="prediction">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <span>Simulation</span>
+    </button>
+    <button class="nav-btn" id="btn-nav-herbier" data-tab="herbier">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      <span>Herbier</span>
+    </button>
+    <button class="nav-btn scan-btn" id="btn-scan-plant">
+      <div class="scan-btn-inner">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      </div>
+      <span>Scanner</span>
+    </button>
+    <button class="nav-btn" id="btn-nav-quests" data-tab="quests">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <span>Quêtes</span>
+    </button>
+    <button class="nav-btn" id="btn-nav-profile" data-tab="profile">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Profil</span>
+    </button>
+  </nav>
+
+  <!-- ============================================ -->
+  <!-- BOUSSOLE GPS                                 -->
+  <!-- ============================================ -->
+  <div id="compass-widget" class="compass-widget hidden">
+    <button class="compass-btn" id="btn-center-gps" aria-label="Centrer sur ma position">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+    </button>
+    <div class="distance-info" id="distance-info">
+      <span id="nearest-plant-distance">--</span>
+      <small>mètres</small>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- MODAL : FICHE PLANTE / PLANTE DÉCOUVERTE     -->
+  <!-- ============================================ -->
+  <div id="plant-modal" class="modal-overlay hidden">
+    <div class="modal-card plant-card">
+      <button class="modal-close" id="btn-close-plant-modal">&times;</button>
+      <div class="plant-card-header" id="plant-card-header">
+        <div class="plant-card-rarity" id="plant-card-rarity">Commune</div>
+        <div class="plant-3d-viewer" id="plant-3d-viewer"></div>
+      </div>
+      <div class="plant-card-body">
+        <h2 class="plant-name" id="plant-modal-name">Nom de la plante</h2>
+        <p class="plant-latin" id="plant-modal-latin">Nom latin</p>
+        <div class="plant-stats">
+          <div class="stat-item">
+            <div class="stat-icon">💧</div>
+            <div class="stat-label">Eau</div>
+            <div class="stat-bar"><div class="stat-fill" id="stat-water" style="width:70%"></div></div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">☀️</div>
+            <div class="stat-label">Soleil</div>
+            <div class="stat-bar"><div class="stat-fill" id="stat-sun" style="width:90%"></div></div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">🌡️</div>
+            <div class="stat-label">Résistance</div>
+            <div class="stat-bar"><div class="stat-fill" id="stat-resistance" style="width:60%"></div></div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">🌱</div>
+            <div class="stat-label">Croissance</div>
+            <div class="stat-bar"><div class="stat-fill" id="stat-growth" style="width:50%"></div></div>
+          </div>
+        </div>
+        <div class="plant-description" id="plant-modal-description">
+          Description de la plante...
+        </div>
+        <div class="plant-actions">
+          <button class="btn-primary" id="btn-capture-plant">
+            <span>📸</span> Capturer cette plante
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- MODAL : APPAREIL PHOTO / SCANNER             -->
+  <!-- ============================================ -->
+  <div id="camera-modal" class="modal-overlay hidden">
+    <div class="camera-view">
+      <video id="camera-feed" autoplay playsinline></video>
+      <canvas id="camera-canvas" class="hidden-canvas"></canvas>
+      <div class="camera-overlay">
+        <div class="scan-frame">
+          <div class="scan-corner top-left"></div>
+          <div class="scan-corner top-right"></div>
+          <div class="scan-corner bottom-left"></div>
+          <div class="scan-corner bottom-right"></div>
+          <div class="scan-line"></div>
+        </div>
+        <p class="scan-instruction">Centrez la plante dans le cadre</p>
+      </div>
+      <div class="camera-controls">
+        <button class="camera-btn secondary" id="btn-close-camera">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <button class="camera-btn primary" id="btn-take-photo">
+          <div class="shutter"></div>
+        </button>
+        <button class="camera-btn secondary" id="btn-switch-camera">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- MODAL : PHOTO CAPTURÉE                       -->
+  <!-- ============================================ -->
+  <div id="capture-result-modal" class="modal-overlay hidden">
+    <div class="modal-card capture-card">
+      <div class="capture-success-animation" id="capture-animation">
+        <div class="sparkle-ring"></div>
+        <div class="captured-image-frame">
+          <img id="captured-image" src="" alt="Plante capturée" />
+        </div>
+      </div>
+      <div class="capture-info">
+        <h2 id="capture-plant-name">Plante Capturée !</h2>
+        <p class="capture-xp">+25 XP</p>
+        <div class="capture-badges">
+          <span class="badge" id="capture-badge">🏆 Première découverte !</span>
+        </div>
+        <button class="btn-primary" id="btn-add-to-herbier">
+          <span>📖</span> Ajouter à mon Herbier
+        </button>
+        <button class="btn-secondary" id="btn-close-capture">Continuer l'exploration</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- PANNEAU : HERBIER (Collection de plantes)    -->
+  <!-- ============================================ -->
+  <div id="herbier-panel" class="side-panel hidden">
+    <div class="panel-header">
+      <h2>📖 Mon Herbier</h2>
+      <button class="panel-close" id="btn-close-herbier">&times;</button>
+    </div>
+    <div class="panel-stats-row">
+      <div class="panel-stat">
+        <span class="panel-stat-value" id="herbier-count">0</span>
+        <span class="panel-stat-label">Découvertes</span>
+      </div>
+      <div class="panel-stat">
+        <span class="panel-stat-value" id="herbier-total">9</span>
+        <span class="panel-stat-label">Total</span>
+      </div>
+      <div class="panel-stat">
+        <span class="panel-stat-value" id="herbier-percent">0%</span>
+        <span class="panel-stat-label">Complétion</span>
+      </div>
+    </div>
+    <div class="herbier-grid" id="herbier-grid">
+      <!-- Rempli dynamiquement par JavaScript -->
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- PANNEAU : QUÊTES                             -->
+  <!-- ============================================ -->
+  <div id="quests-panel" class="side-panel hidden">
+    <div class="panel-header">
+      <h2>📋 Quêtes &amp; zones</h2>
+      <button class="panel-close" id="btn-close-quests">&times;</button>
+    </div>
+    <div class="quests-list" id="quests-list">
+      <!-- Rempli dynamiquement -->
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- TOAST NOTIFICATIONS                          -->
+  <!-- ============================================ -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ============================================ -->
+  <!-- MODAL : ACTIVITÉ ZONE (mini-jeu unifié)      -->
+  <!-- ============================================ -->
+  <div id="zone-activity-modal" class="modal-overlay hidden">
+    <div class="modal-card zone-activity-card">
+      <button type="button" class="modal-close" id="btn-zone-activity-close" aria-label="Fermer">&times;</button>
+      <div class="zone-activity-head">
+        <span id="zone-activity-type" class="zone-activity-type"></span>
+        <h2 id="zone-activity-title" class="zone-activity-title">Activité</h2>
+      </div>
+
+      <div id="zone-phase-start" class="zone-phase">
+        <p id="zone-activity-desc" class="zone-activity-desc"></p>
+        <button type="button" class="btn-primary" id="btn-zone-phase-start">Commencer</button>
+      </div>
+
+      <div id="zone-phase-play" class="zone-phase hidden">
+        <div id="zone-play-host" class="zone-play-host"></div>
+      </div>
+
+      <div id="zone-phase-result" class="zone-phase hidden">
+        <h3 id="zone-result-title" class="zone-result-title"></h3>
+        <p id="zone-result-msg" class="zone-result-msg"></p>
+        <button type="button" class="btn-primary" id="btn-zone-result-next">Continuer</button>
+      </div>
+
+      <div id="zone-phase-reward" class="zone-phase hidden">
+        <h3 class="zone-result-title">Récompense</h3>
+        <ul class="zone-reward-list">
+          <li id="zone-reward-xp"></li>
+          <li id="zone-reward-coins"></li>
+          <li id="zone-reward-badge"></li>
+          <li id="zone-reward-lb"></li>
+        </ul>
+        <button type="button" class="btn-primary" id="btn-zone-reward-close">Retour au campus</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- PANNEAU : SIMULATION (EZ-TREE)               -->
+  <!-- ============================================ -->
+  <div id="prediction-panel" class="side-panel hidden" style="padding: 0; padding-bottom: 76px; overflow: hidden; background: #000; z-index: 90;">
+    <iframe src="eztree-app/index.html" style="width: 100%; height: 100%; border: none;"></iframe>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- MODAL : ELITE BOTANICAL HUB (3D SPECIEMEN)   -->
+  <!-- ============================================ -->
+  <div id="botanical-hub" class="modal-overlay hidden">
+    <div class="botanical-lab-container">
+      <div id="tree-canvas-container"></div>
+      
+      <div class="lab-controls">
+        <button class="icon-btn" id="btn-close-botanical-hub">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="lab-hub-header">
+        <h1 id="lab-plant-name">Quercus Robur</h1>
+        <p id="lab-plant-discovery">Elite Discovery #042</p>
+      </div>
+
+      <div class="lab-stats-panel glass-morphism">
+        <div class="lab-stat">
+          <label>XP VALUE</label>
+          <span id="lab-xp-val">+250</span>
+        </div>
+        <div class="lab-divider"></div>
+        <div class="lab-stat">
+          <label>RARITY</label>
+          <span id="lab-rarity-val">EPIC</span>
+        </div>
+      </div>
+
+      <div class="lab-instruction-overlay">
+        Pinch to zoom • Drag to rotate specimen
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- NATIVE DETECTION SCRIPT                      -->
+  <!-- ============================================ -->
+  <script>
+    (function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('native') === 'true') {
+        document.documentElement.classList.add('is-native');
+        // Hide elements that conflict with Flutter UI
+        const toHide = ['top-bar', 'bottom-nav', 'loading-screen'];
+        toHide.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.style.display = 'none';
+        });
+      }
+    })();
+  </script>
+
+  <!-- ============================================ -->
+  <!-- SCRIPTS MODULAIRES                           -->
+  <!-- ============================================ -->
+  <script src="js/config.js?v=3"></script>
+  <script src="js/plants-data.js?v=3"></script>
+  <script src="js/zones-data.js?v=3"></script>
+  <script src="js/zone-service.js?v=3"></script>
+  <script src="js/zone-detector.js?v=3"></script>
+  <script src="js/map-manager.js?v=3"></script>
+  <script src="js/avatar-system.js?v=3"></script>
+  <script src="js/camera-module.js?v=3"></script>
+  <script src="js/plant-detector.js?v=3"></script>
+  <script src="js/game-state.js?v=3"></script>
+  <script src="js/ui-controller.js?v=3"></script>
+  <script src="js/zone-ui.js?v=3"></script>
+  <script src="js/ez-tree-core.js?v=3"></script>
+  <script src="js/app.js?v=3"></script>
+</body>
+</html>

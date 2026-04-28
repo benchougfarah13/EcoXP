@@ -1,0 +1,136 @@
+from django.contrib.auth.models import User
+from django.db import models
+
+
+# Games Model
+class Game(models.Model):
+    # The name of the game
+    name = models.CharField(max_length=50)
+    # The file name of the game
+    file = models.CharField(max_length=50)
+
+
+# Word Model
+class Word(models.Model):
+    word = models.CharField(max_length=20)
+    hint = models.CharField(max_length=200)
+    fact = models.CharField(max_length=200)
+
+    # Gets the word data for all words
+    @classmethod
+    def get_words(self, word_data):
+        words = []
+        for word in word_data:
+            words.append({
+                'word': word.word,
+                'hint': word.hint,
+                'fact': word.fact
+            })
+        return words
+
+
+# Location model
+class Location(models.Model):
+    # the name of the building
+    name = models.CharField(max_length=50)
+    # the longitude of the building
+    latitude = models.CharField(max_length=50)
+    # the latitude of the building
+    longitude = models.CharField(max_length=50)
+    # a message given by the building
+    message = models.CharField(max_length=200)
+    # the icon of the building
+    icon = models.ImageField(upload_to='app/icons/', blank=True, null=True)
+    # The name of the game that is played at the building
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+
+
+# The leaderboard model
+class Leaderboard(models.Model):
+    # One to one relationship with the User model
+    # When a user is deleted, their leaderboard entry is deleted
+    # User has a level, xp value, and numGamesPlayed value
+    # timesPlayedToday is the number of times the user has played a game today,
+    # which will be reset daily
+    # profilePictureIndex is the index to use when getting user profile picture
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    level = models.IntegerField(default=1)
+    xp = models.IntegerField(default=0)
+    numGamesPlayed = models.IntegerField(default=0)
+    timesPlayedToday = models.IntegerField(default=0)
+    profilePictureIndex = models.IntegerField(default=0)
+
+    # Gets the rank of the user within the leaderboard
+    @classmethod
+    def get_current_user_rank(self, user, user_data, current_user_data):
+        return user_data.index(
+            {
+                'username': user.username,
+                'level': current_user_data.level,
+                'xp': current_user_data.xp,
+                'numGamesPlayed': current_user_data.numGamesPlayed
+            }) + 1
+
+    # Gets the leaderboard data for the current user
+    @classmethod
+    def get_current_user_data(self, user, leaderboard_data):
+        return leaderboard_data.filter(user=user).first()
+
+    # Gets the profile picture index of the user
+    @classmethod
+    def get_profile_picture_index(self, user):
+        leaderboard = Leaderboard.objects.filter(user=user).first()
+        if leaderboard:
+            return leaderboard.profilePictureIndex
+        else:
+            return 0
+
+    # Gets the leaderboard data for all users
+    @classmethod
+    def get_user_data(self, leaderboard_data):
+        user_data = []
+        for user_leaderboard_data in leaderboard_data:
+            user_data.append({
+                'username': user_leaderboard_data.user.username,
+                'level': user_leaderboard_data.level,
+                'xp': user_leaderboard_data.xp,
+                'numGamesPlayed': user_leaderboard_data.numGamesPlayed
+            })
+        return user_data
+
+# GEOCAMPUS Hackathon Unified Schema
+class CampusZone(models.Model):
+    name = models.CharField(max_length=100)
+    health_score = models.FloatField(default=100.0) # Visual health
+    coordinates = models.TextField(help_text="JSON list of [lat, lng] point bounds max length 50")
+
+class ScanEvent(models.Model):
+    player = models.ForeignKey('accounts.Player', on_delete=models.CASCADE)
+    plant_name = models.CharField(max_length=100)
+    confidence = models.FloatField()
+    lat = models.FloatField()
+    lng = models.FloatField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    is_new_discovery = models.BooleanField(default=False)
+
+class Mission(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    mission_type = models.CharField(max_length=50, choices=[('DAILY', 'Daily'), ('EVENT', 'Event'), ('QR', 'QR Checkpoint')])
+    target_score = models.IntegerField()
+    reward_xp = models.IntegerField()
+    reward_coins = models.IntegerField()
+
+class PlayerMission(models.Model):
+    player = models.ForeignKey('accounts.Player', on_delete=models.CASCADE)
+    mission = models.ForeignKey(Mission, on_delete=models.CASCADE)
+    progress = models.IntegerField(default=0)
+    completed = models.BooleanField(default=False)
+
+class RealWorldEvent(models.Model):
+    title = models.CharField(max_length=150)
+    club_name = models.CharField(max_length=100)
+    lat = models.FloatField()
+    lng = models.FloatField()
+    qr_code_secret = models.CharField(max_length=32, unique=True)
+    reward_xp = models.IntegerField()
