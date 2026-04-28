@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(grep -n \"isDiscovered.*'🌿'\\\\|discovered.*'✅'\\\\|'🌿 \\\\${\" \"c:/Users/farah/Downloads/GeoCampus-Complete/GeoCampus-Complete/frontend/lib/screens/geocampus_map.dart\")",
-      "Bash(flutter pub *)"
-    ]
-  }
-}
