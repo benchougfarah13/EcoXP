@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:eco_collect/constants/kenums.dart';
-import 'package:eco_collect/constants/ktheme.dart';
 import 'package:eco_collect/providers/plant_map_provider.dart';
 import 'package:eco_collect/providers/user_provider.dart';
 import 'package:eco_collect/screens/geocampus_scanner.dart';

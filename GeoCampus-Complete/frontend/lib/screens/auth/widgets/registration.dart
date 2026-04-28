@@ -41,7 +41,7 @@ class _RegistrationState extends State<Registration> {
   bool isPasswordHidden = true;
   bool isConfirmPasswordHidden = true;
 
-  String _country = 'Tunisia'; // Hardcoded for backward compatibility
+  final String _country = 'Tunisia'; // Hardcoded for backward compatibility
   String _campus = 'Manouba School of Engineering';
   final List<String> _campuses = [
     'Manouba School of Engineering',
@@ -180,7 +180,7 @@ class _RegistrationState extends State<Registration> {
                                 ),
                                 Commonfunctions.gapMultiplier(),
                                 DropdownButtonFormField<String>(
-                                  value: _campus,
+                                  initialValue: _campus,
                                   dropdownColor: Colors.black87,
                                   style: const TextStyle(color: Colors.white),
                                   decoration: InputDecoration(

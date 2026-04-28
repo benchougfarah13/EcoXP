@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:eco_collect/api/firebase_apis.dart';
 import 'package:eco_collect/components/buttons/reusable_button.dart';
@@ -8,18 +7,15 @@ import 'package:eco_collect/constants/kassets.dart';
 import 'package:eco_collect/constants/kenums.dart';
 import 'package:eco_collect/constants/kshowcase_keys.dart';
 import 'package:eco_collect/constants/kstrings.dart';
-import 'package:eco_collect/constants/ktheme.dart';
 
 import 'package:eco_collect/providers/level_provider.dart';
 import 'package:eco_collect/providers/user_provider.dart';
-import 'package:eco_collect/screens/google_wallet/google_wallet_things.dart';
 import 'package:eco_collect/screens/profile/widgets/user_avatar.dart';
 import 'package:eco_collect/screens/profile/widgets/user_details.dart';
 import 'package:eco_collect/services/audio_services.dart';
 import 'package:eco_collect/services/showcase_services.dart';
 import 'package:eco_collect/utils/common_functions.dart';
 import 'package:eco_collect/utils/kloading.dart';
-import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 

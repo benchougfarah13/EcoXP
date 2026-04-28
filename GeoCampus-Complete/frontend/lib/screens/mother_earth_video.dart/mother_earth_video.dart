@@ -16,9 +16,9 @@ import 'package:video_player/video_player.dart';
 
 class MotherEarthVideo extends StatefulWidget {
   const MotherEarthVideo({
-    Key? key,
+    super.key,
     this.showSkipWarning = true,
-  }) : super(key: key);
+  });
 
   /// Default is `true`
   final bool? showSkipWarning;
@@ -130,7 +130,7 @@ class _MotherEarthVideoState extends State<MotherEarthVideo> {
     );
   }
 
-  _onSkipTap({bool? showWarning = true}) async {
+  Future<void> _onSkipTap({bool? showWarning = true}) async {
     if (showWarning == true) {
       showDialog(
           context: context,

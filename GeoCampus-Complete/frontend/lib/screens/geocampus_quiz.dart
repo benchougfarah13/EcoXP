@@ -83,7 +83,7 @@ class _GeoCampusQuizScreenState extends State<GeoCampusQuizScreen> {
                   onTap: () => _submitAnswer(option),
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),

@@ -112,7 +112,7 @@ class _GotFHomeState extends State<GotFHome> {
     return false;
   }
 
-  moveMap() {
+  void moveMap() {
     for (int i = 0; i < barrierX.length; i++) {
       setState(() {
         // keep barrier moving
@@ -219,7 +219,7 @@ class _GotFHomeState extends State<GotFHome> {
     );
   }
 
-  _restartGame() {
+  void _restartGame() {
     setState(() {
       birdYaxis = 0;
       score = 0;

@@ -119,7 +119,7 @@ class Settings extends StatelessWidget {
             thumbColor: KTheme.globalAppBarBG,
             activeColor: KTheme.activeBg,
             inactiveColor: KTheme.inactiveBg,
-            overlayColor: const MaterialStatePropertyAll(KTheme.globalAppBarBG),
+            overlayColor: const WidgetStatePropertyAll(KTheme.globalAppBarBG),
           ),
         ],
       ),

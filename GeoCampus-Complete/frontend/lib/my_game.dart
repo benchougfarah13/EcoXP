@@ -21,7 +21,6 @@ import 'package:eco_collect/screens/auth/auth_home.dart';
 import 'package:page_transition/page_transition.dart';
 
 import 'package:eco_collect/screens/geocampus/geocampus_session_start_screen.dart';
-import 'package:eco_collect/utils/common_functions.dart';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

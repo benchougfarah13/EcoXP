@@ -200,7 +200,7 @@ class _SoloLevelSubmitTaskScreenState extends State<SoloLevelSubmitTaskScreen> {
     super.dispose();
   }
 
-  _submit() async {
+  Future<void> _submit() async {
     try {
       await FirebaseApis().submitTask(
         task: widget.task,

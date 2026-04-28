@@ -218,7 +218,7 @@ class _SoloLevelTasksScreenState extends State<SoloLevelTasksScreen> {
     );
   }
 
-  _submitForVerification(TaskModel currentTask) async {
+  Future<void> _submitForVerification(TaskModel currentTask) async {
     bool? result = await Navigator.push(
         context,
         MaterialPageRoute(
@@ -329,7 +329,7 @@ class _SoloLevelTasksScreenState extends State<SoloLevelTasksScreen> {
     }
   }
 
-  claimTaskReward({
+  Future<void> claimTaskReward({
     required String taskId,
     required int currentXp,
     required int currentTrophies,

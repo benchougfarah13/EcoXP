@@ -1,4 +1,3 @@
-import 'package:eco_collect/constants/ktheme.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavWidget extends StatelessWidget {
